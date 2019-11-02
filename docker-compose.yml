@@ -1,0 +1,29 @@
+﻿version: '3'
+
+services:
+
+  webhostednetcore:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - luis-net
+  
+  #the name below inuseDB is the name I would reference in the connection string when 
+  #connecting to this postgres db from my 
+  #container above - the webHostedNetCore ASP .NET Core demo web app.
+  #they would see each other because both containers - web and DB are on the same 
+  #container network luis-net.
+
+  inusedb:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    networks:
+      - luis-net
+
+networks:
+  luis-net:
+    driver: bridge
